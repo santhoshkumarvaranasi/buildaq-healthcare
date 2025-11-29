@@ -1,0 +1,149 @@
+<div class="patients-page">
+  <div class="hero mat-elevation-z2">
+    <div class="hero-text">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm-7 9v-1a6 6 0 0 1 12 0v1H5Z" fill="currentColor"/></svg>
+      </div>
+      <div>
+        <p class="eyebrow">Healthcare Management</p>
+        <h1>Patients</h1>
+        <p class="subtitle">Census, status, and next steps in one view.</p>
+      </div>
+    </div>
+    <button mat-flat-button color="accent" class="record-btn">
+      <span class="btn-icon">
+        <svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" fill="currentColor"/></svg>
+      </span>
+      Add Patient
+    </button>
+  </div>
+
+  <div class="summary-grid">
+    <mat-card class="metric-card mat-elevation-z2" *ngFor="let m of metricCards">
+      <div class="metric-icon">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm-7 9v-1a6 6 0 0 1 12 0v1H5Z" fill="currentColor"/></svg>
+      </div>
+      <div class="metric-body">
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-hint">{{ m.meta }}</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="filters-card mat-elevation-z2">
+    <div class="filter-grid compact">
+      <mat-form-field appearance="fill" class="full-width search-field">
+        <mat-label>Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [(ngModel)]="search" (ngModelChange)="applyFilters()" placeholder="name, MRN" />
+        <button *ngIf="search" matSuffix mat-icon-button aria-label="Clear search" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="chip-group">
+        <div class="chip-label">Status</div>
+        <mat-chip-listbox class="status-chips" [value]="statusFilter" (selectionChange)="onStatusChipChange($event)">
+          <mat-chip-option value="all">All</mat-chip-option>
+          <mat-chip-option value="Inpatient">Inpatient</mat-chip-option>
+          <mat-chip-option value="ED">ED</mat-chip-option>
+          <mat-chip-option value="Observation">Observation</mat-chip-option>
+          <mat-chip-option value="Discharged">Discharged</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Unit</mat-label>
+        <mat-select [(ngModel)]="unitFilter" (selectionChange)="applyFilters()">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let u of units" [value]="u">{{ u }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="chip-group">
+        <div class="chip-label">Acuity</div>
+        <mat-chip-listbox class="status-chips" [value]="acuityFilter" (selectionChange)="onAcuityChipChange($event)">
+          <mat-chip-option value="all">All</mat-chip-option>
+          <mat-chip-option value="High">High</mat-chip-option>
+          <mat-chip-option value="Med">Med</mat-chip-option>
+          <mat-chip-option value="Low">Low</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+
+      <div class="export-wrap">
+        <button mat-stroked-button color="primary" class="ghost-button" (click)="clearSearch()">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 6V3L8 7l4 4V8c2.21 0 4 1.79 4 4 0 .34-.04.67-.12.98l1.53 1.53C17.8 13.67 18 12.86 18 12c0-3.31-2.69-6-6-6zm-5.88.02C6.2 8.33 6 9.14 6 10c0 3.31 2.69 6 6 6v3l4-4-4-4v3c-2.21 0-4-1.79-4-4 0-.34.04-.67.12-.98L6.59 6.48 6.12 6.02z" fill="currentColor"/></svg>
+          </span>
+          Reset Filters
+        </button>
+        <button mat-flat-button color="accent" class="ghost-button">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 19h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Export CSV
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="table-card mat-elevation-z2">
+    <div class="table-head">
+      <div>
+        <mat-card-title>Patient census</mat-card-title>
+        <mat-card-subtitle>Filtered list by unit and status.</mat-card-subtitle>
+      </div>
+      <div class="last-updated">Updated just now</div>
+    </div>
+
+    <div class="table-wrap desktop-only">
+      <table mat-table [dataSource]="dataSource" matSort class="hc-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="cell-title">{{ row.name }}</div>
+            <div class="cell-meta">MRN {{ row.mrn }}</div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="unit">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit</th>
+          <td mat-cell *matCellDef="let row">{{ row.unit }}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-chip class="status-chip" [color]="(row.status || '').toLowerCase() === 'inpatient' ? 'primary' : 'accent'">
+              {{ row.status }}
+            </mat-chip>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="acuity">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Acuity</th>
+          <td mat-cell *matCellDef="let row">{{ row.acuity }}</td>
+        </ng-container>
+        <ng-container matColumnDef="provider">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Provider</th>
+          <td mat-cell *matCellDef="let row">{{ row.provider }}</td>
+        </ng-container>
+        <ng-container matColumnDef="admitted">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Admitted</th>
+          <td mat-cell *matCellDef="let row">{{ row.admitted }}</td>
+        </ng-container>
+        <ng-container matColumnDef="nextStep">
+          <th mat-header-cell *matHeaderCellDef>Next</th>
+          <td mat-cell *matCellDef="let row">{{ row.nextStep }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="empty-state" *matNoDataRow>
+          <td [attr.colspan]="displayedColumns.length">
+            <div class="fee-empty">No patients match your filters.</div>
+          </td>
+        </tr>
+      </table>
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+    </div>
+  </mat-card>
+</div>

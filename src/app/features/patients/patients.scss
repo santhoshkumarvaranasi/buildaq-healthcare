@@ -1,0 +1,90 @@
+.patients-page { display: grid; gap: 16px; padding: 12px; }
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #1d4ed8, #60a5fa);
+  color: #fff;
+}
+.hero .eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; margin: 0; }
+.hero h1 { margin: 2px 0 4px; font-size: 24px; }
+.hero .subtitle { margin: 0; opacity: 0.9; }
+.hero-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: grid;
+  place-items: center;
+  margin-right: 12px;
+}
+.hero-icon .icon { width: 28px; height: 28px; color: #fff; }
+.record-btn mat-icon { margin-right: 6px; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.metric-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+}
+.metric-icon .icon { width: 22px; height: 22px; }
+.metric-body .metric-label { text-transform: uppercase; font-size: 11px; color: #64748b; letter-spacing: .06em; margin: 0; }
+.metric-body .metric-value { margin: 0; font-size: 22px; font-weight: 700; }
+.metric-body .metric-hint { margin: 0; color: #94a3b8; }
+
+.record-btn {
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
+.btn-icon svg { width: 18px; height: 18px; }
+
+.filters-card { padding: 12px; }
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.chip-group { display: grid; gap: 6px; }
+.chip-label { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #475569; }
+.status-chips { width: 100%; }
+.export-wrap { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.ghost-button { text-transform: none; }
+
+.table-card { padding: 12px; }
+.table-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.last-updated { color: #94a3b8; font-size: 12px; }
+
+.table-wrap {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+table { width: 100%; }
+.cell-title { font-weight: 600; }
+.cell-meta { color: #94a3b8; font-size: 12px; }
+.status-chip { font-weight: 600; }
